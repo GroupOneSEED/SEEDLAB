@@ -38,8 +38,7 @@ def cameraCalibration():
     gain = camera.awb_gains
     camera.awb_mode = 'off'
     camera.awb_gains = gain
-    for i in range(3):
-        camera.capture('calibration.jpg')
+    camera.capture('calibration.jpg')
 
     return(gain)
 
