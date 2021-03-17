@@ -51,7 +51,7 @@ def Angle():
             D = (H * f)/(PY)
             print(D)
             #FOV = 63.9
-            distFromCenter = (H / PY) * (abs(640 - centerX))
+            distFromCenter = (H / PY) * (640 - centerX)
             #distFromCenter = distFromCenter / 1.06042
             print(distFromCenter)
             phi = m.atan((distFromCenter / D)) * (180 / m.pi)
