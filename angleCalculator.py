@@ -57,6 +57,8 @@ def Angle():
             phi = m.atan((distFromCenter / D)) * (180 / m.pi)
             phi = phi / 1.015461178
             lcd.message = "Angle: %.2f     "  %phi
+        else:
+            lcd.message = "No maker found!"
     cap.release()
     
 Angle()  
