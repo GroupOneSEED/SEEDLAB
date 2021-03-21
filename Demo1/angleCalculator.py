@@ -45,14 +45,12 @@ def Angle():
             PY = ((abs(topRightY - bottomRightY)) + (abs(topLeftY - bottomLeftY))) / (2) #Average height in pixels
             centerX = (((topLeftX + bottomRightX) / (2)) + ((topRightX + bottomLeftX) / (2))) / (2)
             #f = 1772.4680966603312 #This value for 1920x1080
-            #f = 1161.9310344827586 #This value corresponds to a resolution of 1280x720
-            f = 1205.54272517321
+            f = 1205.54272517321 #This value for 1280x720
             H = 1.732
             D = (H * f)/(PY)
             print(D)
             #FOV = 63.9
             distFromCenter = (H / PY) * (640 - centerX)
-            #distFromCenter = distFromCenter / 1.06042
             print(distFromCenter)
             phi = m.atan((distFromCenter / D)) * (180 / m.pi)
             phi = phi / 1.015461178
