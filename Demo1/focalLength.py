@@ -6,9 +6,7 @@ import cv2.aruco as aruco
 import numpy as np
 
 
-#H = 1.8125 #height in mm of the aruco marker
-H = 1.732 #corresponds to 44mm
-#H = 1.84375
+H = 1.732 #corresponds to 44mm height of the aruco marker being used
 D = 36 #distance in mm
 
 #fileName = input("Please enter a file name for the image: ")
