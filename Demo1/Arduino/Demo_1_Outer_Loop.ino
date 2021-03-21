@@ -1,8 +1,10 @@
 /*  
-    Brent Misare, Brett Schearer, EENG350
+    Brent Misare, Perry Rodenbeck, Brett Schearer, Nick Zimkas
+    EENG350
 
-    Description: This arduino code implelemts the controller for the motor based
-    on data from Matlab simulations.
+    Description: This arduino code implelemts the controller for the two motors based
+    on data from Matlab simulations. It allows the robot to move based on desired
+    distance and angle values.
 
     Circuit: 
     Attach Motor Driver to the Arduino
@@ -53,8 +55,8 @@
 
 #define SLAVE_ADDRESS 0x04  // Sets the address for the arduino when communicating with the pi
 
-float wheelRad = 0.242782;  // Radius of the wheels in feet
-float botDiam  = 0.85958; // Distance between the wheels in feet
+float wheelRad = 0.24600;  // Radius of the wheels in feet (0.242782 measured) (Increasing this decreases travel distance)
+float botDiam  = 0.88000; // Distance between the wheels in feet (0.85958 measured) (Increasing this increases travel distance)
 
 int   voltLeft  = 0;   // Stores the PWM "voltage" going to the motor (0 - 255)
 int   voltRight = 0;   // Stores the PWM "voltage" going to the motor (0 - 255)
@@ -83,21 +85,21 @@ float thetaRightdot = 0;   // Stores the angular velovity of the right wheel
 // Position variables (Rho)
 float rho           = 0;     
 float rhoDes        = 0;
-float rhoDiff       = 0;
-float rhoDiffPrev   = 0;
+float rhoErr       = 0;
+float rhoErrPrev   = 0;
 
-// Angular Position Variables
+// Angular Position Variables (Phi)
 float phi           = 0;     
 float phiDes        = 0;
-float phiDiff       = 0;
-float phiDiffPrev   = 0;
+float phiErr       = 0;
+float phiErrPrev   = 0;
 
 // Velocity variables (Rho dot)
 float rhoDot       = 0;  
 float rhoDotMax    = 1;   
 float rhoDotPrev   = 0;
 float rhoDotDes    = 0;
-float rhoDotDiff   = 0;
+float rhoDotErr    = 0;
 float rhoDotInt    = 0;
 float rhoDotIntMax = 1.02;  // Maximum value for the integral sum
 
@@ -106,28 +108,25 @@ float phiDot       = 0;
 float phiDotMax    = PI/2.0;
 float phiDotPrev   = 0;
 float phiDotDes    = 0;
-
-float phiDotDiff   = 0;
+float phiDotErr    = 0;
 float phiDotInt    = 0;
 float phiDotIntMax = 1.457; // Maximum value for the integral sum
 
 // Controller Constants
-float Kp_phi = 2;
-float Kd_phi = 0.5;
-float Kp_rho = 6.3;
-float Kd_rho = 1.7;
+float Kp_phi    = 2.5;  
+float Kd_phi    = 0.5;  
+float Kp_rho    = 6.3;
+float Kd_rho    = 1.7;
 float Kp_phiDot = 0;
 float Ki_phiDot = 350;
 float Kp_rhoDot = 0;
 float Ki_rhoDot = 500;
 
-int quad = 0; // Stores the intended quadrant recieved from the pi (0-3)
+// Stores the intended quadrant recieved from the pi (0-3)
+int quad = 0; 
 
 //=======================================================================================================
 // Sets up Encoders
-
-// Encoder wheelLeft(LA, LB);
-// Encoder wheelRight(RA, RB);
 
 void encISRLeft(){
   // Reads values
@@ -169,6 +168,7 @@ void encISRRight(){
 //=======================================================================================================
 // Wheel functions
 
+// moves the left wheel based on the PWM voltage value
 void moveLeft(int voltage){
   voltage = normalize(voltage, 255);
   if(voltage < 0){
@@ -180,6 +180,7 @@ void moveLeft(int voltage){
   analogWrite(MLVOLT, voltage);
 }
 
+// moves the right wheel based on the PWM voltage value
 void moveRight(int voltage){
   voltage = normalize(voltage, 255);
   if(voltage < 0){
@@ -191,6 +192,7 @@ void moveRight(int voltage){
   analogWrite(MRVOLT, voltage);
 }
 
+// Stops both wheels
 void stopWheels(){
   digitalWrite(MLSIGN, HIGH);
   digitalWrite(MRSIGN, LOW);
@@ -206,6 +208,12 @@ float normalize(float voltage, float cap){
     voltage = (-1*cap);
   }
   return voltage;
+}
+
+// Sets the desired values to the current values, stopping the robot in place
+void forget(){
+  phiDes = phi;
+  rhoDes = rho;
 }
 
 //=======================================================================================================
@@ -299,54 +307,54 @@ void loop() {
   // Stores the current run time to use in the delay at the endo of the loop
   startTime = millis();
 
-  // Sets desired position values
-  if(startTime > 7000){
-    //rhoDes = 1;
-    //phiDes = 2*PI;
+  // Sets desired position and angle values
+  if(startTime > 8000){
+    rhoDes = 1.0;
+  }else if(startTime > 7500){
+    forget();
   }else if(startTime > 3000){
-    rhoDes = 0;
-    phiDes = 2*PI;
+    phiDes = -PI;
+    rhoDes = 0.0;
   }
   
   // Angular Controller Outer Loop
   phi = wheelRad * (1.0 / botDiam) * (thetaRight - thetaLeft);
-  phiDiff = phiDes - phi;
-  phiDotDes = (phiDiff * Kp_phi) + (Kd_phi * (phiDiff - phiDiffPrev) * (1000.0 / timeDelay));
+  phiErr = phiDes - phi;
+  phiDotDes = (phiErr * Kp_phi) + (Kd_phi * (phiErr - phiErrPrev) * (1000.0 / timeDelay));
   phiDotDes = normalize(phiDotDes, phiDotMax);
   
   // Position Controller Outer Loop
   rho = wheelRad * (0.5) * (thetaRight + thetaLeft);
-  rhoDiff = rhoDes - rho;
-  rhoDotDes = (rhoDiff * Kp_rho) + (Kd_rho * (rhoDiff - rhoDiffPrev) * (1000.0 / timeDelay));
+  rhoErr = rhoDes - rho;
+  rhoDotDes = (rhoErr * Kp_rho) + (Kd_rho * (rhoErr - rhoErrPrev) * (1000.0 / timeDelay));
   rhoDotDes = normalize(rhoDotDes, rhoDotMax);
   
   
   // Angular Velocity Controller
   phiDot = wheelRad * (thetaRightdot - thetaLeftdot) * (1.0 / botDiam);
-  phiDotDiff = phiDotDes - phiDot;
-  phiDotInt += (phiDotDiff) * (timeDelay / 1000.0);
+  phiDotErr = phiDotDes - phiDot;
+  phiDotInt += (phiDotErr) * (timeDelay / 1000.0);
   if(phiDotInt > phiDotIntMax){
     phiDotInt = phiDotIntMax;
   }
-  voltDelta = (phiDotDiff * Kp_phiDot) + (Ki_phiDot * phiDotInt);
+  voltDelta = (phiDotErr * Kp_phiDot) + (Ki_phiDot * phiDotInt);
 
   // Velocity Controller
   rhoDot = (0.5) * wheelRad * (thetaLeftdot + thetaRightdot);
-  rhoDotDiff = rhoDotDes - rhoDot;
-  rhoDotInt += (rhoDotDiff) * (timeDelay / 1000.0);
+  rhoDotErr = rhoDotDes - rhoDot;
+  rhoDotInt += (rhoDotErr) * (timeDelay / 1000.0);
   if(rhoDotInt > rhoDotIntMax){
     rhoDotInt = rhoDotIntMax;
   }
-  voltBar = (rhoDotDiff * Kp_rhoDot) + (Ki_rhoDot * rhoDotInt);
+  voltBar = (rhoDotErr * Kp_rhoDot) + (Ki_rhoDot * rhoDotInt);
 
   // Calculated left/right voltage values
   voltLeft  = (0.5)*(voltBar - voltDelta);
   voltRight = (0.5)*(voltBar + voltDelta);
 
   // Updates previous values
-  phiDiffPrev = phiDiff;
-  rhoDiffPrev = rhoDiff;
-  
+  phiErrPrev = phiErr;
+  rhoErrPrev = rhoErr;
   phiDotPrev  = phiDot;
   rhoDotPrev  = rhoDot;
 
@@ -362,10 +370,14 @@ void loop() {
   Serial.print(phiDes);
   Serial.print("\t phi: ");
   Serial.print(phi);
-  Serial.print("\t phiDotDes: ");
-  Serial.print(phiDotDes);
   Serial.print("\t rhoDes: ");
   Serial.print(rhoDes);
+  Serial.print("\t rho: ");
+  Serial.print(rho);
+  Serial.print("\t EncRight: ");
+  Serial.print(encCountRight);
+  Serial.print("\t EncLeft: ");
+  Serial.print(encCountLeft);
   Serial.print("\t Vl: ");
   Serial.print(voltLeft);
   Serial.print("\t Vr: ");
