@@ -5,9 +5,10 @@ import cv2 as cv
 import cv2.aruco as aruco
 import numpy as np
 
-
-H = 1.732 #corresponds to 44mm height of the aruco marker being used
-D = 36 #distance in mm
+#H corresponds to 44mm height of the aruco marker being used
+H = 1.732 
+#D distance in inches
+D = 36 
 
 #fileName = input("Please enter a file name for the image: ")
 #camera = PiCamera(resolution = (1920, 1080))
