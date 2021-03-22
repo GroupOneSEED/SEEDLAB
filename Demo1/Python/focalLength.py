@@ -37,12 +37,14 @@ for i in range(3):
     bottomLeftX = int(cornerList[0][0][3][0])
     topRightX = int(cornerList[0][0][1][0])
     topLeftX = int(cornerList[0][0][0][0])
+    #PY is the average height in pixels of the aruco marker.
     PY = ((abs(topRightY - bottomRightY)) + (abs(topLeftY - bottomLeftY))) / (2)
-
+    #F is the calculated focal length of the camera.
     F = (PY * D) / (H)
     focalList.append(F)
     sleep(1)
 print(cornerList)
 print(focalList)
+#focalAverage takes the average of the focal lengths calcuated to determine the focal length that will be used.
 focalAverage = sum(focalList) / len(focalList)
 print(focalAverage)
