@@ -23,15 +23,18 @@ bus = smbus.SMBus(1)
 addr = 0x04
 
 def Angle():
+    #The following three lines start the video capture at 1280x720
     cap = cv.VideoCapture(0)
     cap.set(cv.CAP_PROP_FRAME_WIDTH, 1280)
     cap.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
     while(True):
+        #The following five lines of code take the images "frames" from the video capture, convert it to a grayscale image, define aruco parameters, and then search for the aruco marker
         ret, frame = cap.read()
         grayImg = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
         arucoDictionary = aruco.Dictionary_get(aruco.DICT_6X6_250)
         arucoParameters = aruco.DetectorParameters_create()
         corners, ids, rejectedImgPoints = aruco.detectMarkers(grayImg, arucoDictionary,parameters=arucoParameters)
+        #The following if conditional runs if a marker is detected.
         if ids is not None:
             cornerList = list(corners)
             bottomRightY = int(cornerList[0][0][2][1])
@@ -42,10 +45,14 @@ def Angle():
             bottomLeftX = int(cornerList[0][0][3][0])
             topRightX = int(cornerList[0][0][1][0])
             topLeftX = int(cornerList[0][0][0][0])
-            PY = ((abs(topRightY - bottomRightY)) + (abs(topLeftY - bottomLeftY))) / (2) #Average height in pixels
+            #PY is the average height of the marker in the image in pixels
+            PY = ((abs(topRightY - bottomRightY)) + (abs(topLeftY - bottomLeftY))) / (2) 
+            #CenterX is the center x coordinate of  the aruco marker in the image
             centerX = (((topLeftX + bottomRightX) / (2)) + ((topRightX + bottomLeftX) / (2))) / (2)
             #f = 1772.4680966603312 #This value for 1920x1080
-            f = 1205.54272517321 #This value for 1280x720
+            #This value for 1280x720
+            f = 1205.54272517321 
+            #H is the height of the marker in inches
             H = 1.732
             D = (H * f)/(PY)
             print(D)
