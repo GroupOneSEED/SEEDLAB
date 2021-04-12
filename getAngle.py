@@ -27,12 +27,17 @@ corners = 0
 cap = cv.VideoCapture(0)
 cap.set(cv.CAP_PROP_FRAME_WIDTH, 1280)
 cap.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
+#cap.set(cv.CAP_PROP_EXPOSURE, -4)
 ret, frame = cap.read()
 
-def Angle(frame):
-    
+def Angle():
+#    print("check1")
+    ret, frame = cap.read()
     grayImg = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    arucoDictionary = aruco.Dictionary_get(aruco.DICT_6X6_250)
+    #cv.imshow("window", grayImg)
+    #if (cv.waitKey(1) & 0xFF == ord('q')):
+        #cv.destroyAllWindows()
+    arucoDictionary = aruco.Dictionary_get(aruco.DICT_4X4_50)
     arucoParameters = aruco.DetectorParameters_create()
     corners, ids, rejectedImgPoints = aruco.detectMarkers(grayImg, arucoDictionary,parameters=arucoParameters)
     if ids is not None:
@@ -49,21 +54,29 @@ def Angle(frame):
         centerX = (((topLeftX + bottomRightX) / (2)) + ((topRightX + bottomLeftX) / (2))) / (2)
         #f = 1772.4680966603312 #This value for 1920x1080
         #f = 1161.9310344827586 #This value corresponds to a resolution of 1280x720
-        f = 1205.54272517321
-        H = 1.732 #Height/width of aruco marker being used in inches (44mm).
+        #f = 1205.54272517321 #This corresponds to small marker of 44mm
+        #f = 1225.4837780512712 6X6
+        f = 1224.223207208012 #4X4
+        #H = 3.8189  6X6
+        H = 3.58268   #4X4
+        #H = 1.732 #Height/width of aruco marker being used in inches (44mm).
         D = (H * f)/(PY)
         #FOV = 63.9
         distFromCenter = ((H / PY) * (640 - centerX))
         #distFromCenter = distFromCenter / 1.06042
         phi = m.atan((distFromCenter / D)) * (180 / m.pi)
         phi = phi / 1.015461178
-        lcd.message = "Angle: %.2f     "  %phi
-        return phi, D, ids
-def Distance():
-    cap = cv.VideoCapture(0)
-    cap.set(cv.CAP_PROP_FRAME_WIDTH, 1280)
-    cap.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
-    ret, frame = cap.read()
+        
+        
+    else:
+        phi = 0
+        D = 0
+       
+        
+    return phi, ids, D
+
+def Distance(frame):
+    
     grayImg = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     arucoDictionary = aruco.Dictionary_get(aruco.DICT_6X6_250)
     arucoParameters = aruco.DetectorParameters_create()
@@ -85,43 +98,47 @@ def Distance():
         f = 1205.54272517321
         H = 1.732 #Height/width of aruco marker being used in inches (44mm).
         D = (H * f)/(PY)
-        return D
-   
+        
+    else:
+        D = 0
+    return D
 
-
-cap = cv.VideoCapture(0)
-cap.set(cv.CAP_PROP_FRAME_WIDTH, 1280)
-cap.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
-
-def seek(frame):
+def ID(frame):
+    
     grayImg = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     arucoDictionary = aruco.Dictionary_get(aruco.DICT_6X6_250)
     arucoParameters = aruco.DetectorParameters_create()
     corners, ids, rejectedImgPoints = aruco.detectMarkers(grayImg, arucoDictionary,parameters=arucoParameters)
-    if ids is not None:
-        return DetectAngle
+    return ids
+
+
     
-def DetectAngle(frame):
-    
-    phi = Angle(frame)
-#    while(arduino not respond):
-        
-    return DetectD
-
-def DetectD(frame):
-    D = Distance(frame)
-#    while(arduino not respond):
-        
-    return Turn90
-
-
 i = 0
+
 while(1):
-    phi, D, ids = Angle(frame)
-    bus.write_i2c_block_data(addr, 0, [phi, D])
+    ret, frame = cap.read()
+    phi, ids, D = Angle()
+    print(D)
+    #cv.imshow("window", frame)
+#    D = Distance(frame)
+#    ids = ID(frame)
+#    Dint = int(D)
+#    D3 = D*10-Dint*10
+#    print("check2")
+    while True:
+        try:
+            if (D != 0):
+                lcd.message = "Angle: %.2f     "  %phi
+                bus.write_i2c_block_data(addr, 0, [int(2*(phi+32)), int(round(2*D))])
+            break
+        except:
+            print("I2C Error")
+            lcd.message = "I2C Error"
     if ids is not None:
-        i = 1 
-    if (ids is None) and (i == 1):
+        i += 1 
+    if (ids is None) and (i == 6):
         break
-    sleep(.5)
+
+    sleep(0)
 cap.release()
+
