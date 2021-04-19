@@ -1,3 +1,11 @@
+#Brent Misare, Perry Rodenbeck, Brett Schearer, Nick Zimkas
+#EENG350
+
+#Description: This python code implelemts a function to determine
+#the focal length of the camera based upon marker size.
+
+
+
 from picamera import PiCamera as Camera
 from picamera.array import PiRGBArray
 from time import sleep
