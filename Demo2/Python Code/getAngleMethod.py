@@ -1,7 +1,7 @@
 #Brent Misare, Perry Rodenbeck, Brett Schearer, Nick Zimkas
 #EENG350
 
-#Description: This python code implelemts a function to detec the angle
+#Description: This python code implelemts a function to detect the angle
 #and distance of an aruco marker from the robot's camera.
 
 
