@@ -1,3 +1,10 @@
+#Brent Misare, Perry Rodenbeck, Brett Schearer, Nick Zimkas
+#EENG350
+
+#Description: This python code implelemts a function to detec the angle
+#and distance of an aruco marker from the robot's camera.
+
+
 from picamera import PiCamera
 from picamera.array import PiRGBArray
 from time import sleep
