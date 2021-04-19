@@ -75,41 +75,7 @@ def Angle():
         
     return phi, ids, D
 
-def Distance(frame):
-    
-    grayImg = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    arucoDictionary = aruco.Dictionary_get(aruco.DICT_6X6_250)
-    arucoParameters = aruco.DetectorParameters_create()
-    corners, ids, rejectedImgPoints = aruco.detectMarkers(grayImg, arucoDictionary,parameters=arucoParameters)
-    if ids is not None:
-        cornerList = list(corners)
-        bottomRightY = int(cornerList[0][0][2][1])
-        bottomLeftY = int(cornerList[0][0][3][1])
-        topRightY = int(cornerList[0][0][1][1])
-        topLeftY = int(cornerList[0][0][0][1])
-        bottomRightX = int(cornerList[0][0][2][0])
-        bottomLeftX = int(cornerList[0][0][3][0])
-        topRightX = int(cornerList[0][0][1][0])
-        topLeftX = int(cornerList[0][0][0][0])
-        PY = ((abs(topRightY - bottomRightY)) + (abs(topLeftY - bottomLeftY))) / (2) #Average height in pixels
-        centerX = (((topLeftX + bottomRightX) / (2)) + ((topRightX + bottomLeftX) / (2))) / (2)
-        #f = 1772.4680966603312 #This value for 1920x1080
-        #f = 1161.9310344827586 #This value corresponds to a resolution of 1280x720
-        f = 1205.54272517321
-        H = 1.732 #Height/width of aruco marker being used in inches (44mm).
-        D = (H * f)/(PY)
-        
-    else:
-        D = 0
-    return D
 
-def ID(frame):
-    
-    grayImg = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    arucoDictionary = aruco.Dictionary_get(aruco.DICT_6X6_250)
-    arucoParameters = aruco.DetectorParameters_create()
-    corners, ids, rejectedImgPoints = aruco.detectMarkers(grayImg, arucoDictionary,parameters=arucoParameters)
-    return ids
 
 
     
