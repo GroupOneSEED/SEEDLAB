@@ -6,7 +6,7 @@ import cv2.aruco as aruco
 import numpy as np
 
 #H corresponds to 44mm height of the aruco marker being used
-H = 1.732 
+H = 3.58268 
 #D distance in inches
 D = 36 
 
