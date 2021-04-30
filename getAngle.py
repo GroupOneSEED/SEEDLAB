@@ -25,6 +25,7 @@ addr = 0x04
 corners = 0
 
 cap = cv.VideoCapture(0)
+cap.set(cv.CAP_PROP_FPS, 60)
 cap.set(cv.CAP_PROP_FRAME_WIDTH, 1280)
 cap.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
 #cap.set(cv.CAP_PROP_EXPOSURE, -4)
@@ -322,6 +323,7 @@ def Angle4():
     return phi, ids, D
 
 
+
 def Angle5():
 #    print("check1")
     ret, frame = cap.read()
@@ -410,6 +412,8 @@ while(1):
 
 i = 0
 
+sleep(1)
+
 while(1):
     ret, frame = cap.read()
     phi, ids, D = Angle1()
@@ -431,11 +435,13 @@ while(1):
             lcd.message = "I2C Error"
     if ids is not None:
         i += 1 
-    if (ids is None) and (i > 6):
+    if (ids is None) and (i > 8):
         break
 
 
 i = 0
+
+sleep(2)
     
 while(1):
     ret, frame = cap.read()
@@ -458,11 +464,13 @@ while(1):
             lcd.message = "I2C Error"
     if ids is not None:
         i += 1 
-    if (ids is None) and (i > 6):
+    if (ids is None) and (i > 8):
         break
         
         
- i = 0
+i = 0
+
+sleep(2)
     
 while(1):
     ret, frame = cap.read()
@@ -485,12 +493,14 @@ while(1):
             lcd.message = "I2C Error"
     if ids is not None:
         i += 1 
-    if (ids is None) and (i > 6):
+    if (ids is None) and (i > 8):
         break
         
         
         
- i = 0
+i = 0
+    
+sleep(2)
     
 while(1):
     ret, frame = cap.read()
@@ -513,11 +523,13 @@ while(1):
             lcd.message = "I2C Error"
     if ids is not None:
         i += 1 
-    if (ids is None) and (i > 6):
+    if (ids is None) and (i > 8):
         break
         
         
- i = 0
+sleep(2)
+        
+i = 0
     
 while(1):
     ret, frame = cap.read()
@@ -540,8 +552,37 @@ while(1):
             lcd.message = "I2C Error"
     if ids is not None:
         i += 1 
-    if (ids is None) and (i > 6):
-        break       
+    if (ids is None) and (i > 8):
+        break
+    
+    
+sleep(2)
+i = 0
+    
+while(1):
+    ret, frame = cap.read()
+    phi, ids, D = Angle0()
+    print(phi)
+    #cv.imshow("window", frame)
+#    D = Distance(frame)
+#    ids = ID(frame)
+#    Dint = int(D)
+#    D3 = D*10-Dint*10
+#    print("check2")
+    while True:
+        try:
+            if (D != 0):
+                lcd.message = "Angle: %.2f     "  %phi
+                bus.write_i2c_block_data(addr, 0, [int(2*(phi+32)), int(round(2*D))])
+            break
+        except:
+            print("I2C Error")
+            lcd.message = "I2C Error"
+    if ids is not None:
+        i += 1 
+    if (ids is None) and (i > 8):
+        break
+    
 
  
 cap.release()
