@@ -3,5 +3,15 @@ Group #1 (Brent Misare, Perry Rodenbeck, Brett Schearer, Nick Zimkas)
 Final Demo
 
 This folder contains the simulations, code, and files used for the final demo.
+
 The files are sorted into subfolders based on the type of code used. The subfolders are as follows:
-      Python Code:  
+      C++ Code:
+            This is to be run on the Arduino.
+            It handles the control, localization, i2c communication (slave), as well as the main finite state machine.
+      Python Code:
+            This is to be run on the Raspberry Pi.
+            It handles the computer vison, system integration, and i2c communication (master).
+      Matlab and Simulink:
+            While this code is never run on the robot, it was critical in the creation of the C++ code.
+            The folder contains simulations and block diagrams designed to obtain and tune values related to the feedback and control of the robot.
+            
