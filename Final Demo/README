@@ -8,10 +8,11 @@ The files are sorted into subfolders based on the type of code used. The subfold
       C++ Code:
             This is to be run on the Arduino.
             It handles the control, localization, i2c communication (slave), as well as the main finite state machine.
-      Python Code:
-            This is to be run on the Raspberry Pi.
-            It handles the computer vison, system integration, and i2c communication (master).
       Matlab and Simulink:
             While this code is never run on the robot, it was critical in the creation of the C++ code.
             The folder contains simulations and block diagrams designed to obtain and tune values related to the feedback and control of the robot.
+      Python Code:
+            This is to be run on the Raspberry Pi.
+            It handles the computer vison, system integration, and i2c communication (master).
+
             
