@@ -1,3 +1,9 @@
+#Brent Misare, Perry Rodenbeck, Brett Schearer, Nick Zimkas
+#EENG350
+
+#Description: This python code implelemts functions and sequential loops to detect the angles
+#and distances of seven aruco markers such that the robot can navigate around them for the final demo.
+
 from picamera import PiCamera
 from picamera.array import PiRGBArray
 from time import sleep
