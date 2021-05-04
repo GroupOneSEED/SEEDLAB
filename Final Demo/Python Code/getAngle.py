@@ -24,20 +24,17 @@ addr = 0x04
 
 corners = 0
 
+#The following block of code establishes the OpenCV image object.
 cap = cv.VideoCapture(0)
 cap.set(cv.CAP_PROP_FPS, 60)
 cap.set(cv.CAP_PROP_FRAME_WIDTH, 1280)
 cap.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
-#cap.set(cv.CAP_PROP_EXPOSURE, -4)
 ret, frame = cap.read()
 
+#The following function is used to detect aruco marker id 0.
 def Angle0():
-#    print("check1")
     ret, frame = cap.read()
     grayImg = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    #cv.imshow("window", grayImg)
-    #if (cv.waitKey(1) & 0xFF == ord('q')):
-        #cv.destroyAllWindows()
     arucoDictionary = aruco.Dictionary_get(aruco.DICT_6X6_250)
     arucoParameters = aruco.DetectorParameters_create()
     corners, ids, rejectedImgPoints = aruco.detectMarkers(grayImg, arucoDictionary,parameters=arucoParameters)
@@ -88,13 +85,11 @@ def Angle0():
         
     return phi, ids, D
 
+
+#The following function is used to detect aruco marker id 1.
 def Angle1():
-#    print("check1")
     ret, frame = cap.read()
     grayImg = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    #cv.imshow("window", grayImg)
-    #if (cv.waitKey(1) & 0xFF == ord('q')):
-        #cv.destroyAllWindows()
     arucoDictionary = aruco.Dictionary_get(aruco.DICT_6X6_250)
     arucoParameters = aruco.DetectorParameters_create()
     corners, ids, rejectedImgPoints = aruco.detectMarkers(grayImg, arucoDictionary,parameters=arucoParameters)
@@ -147,13 +142,10 @@ def Angle1():
     return phi, ids, D
 
 
+#The following function is used to detect aruco marker id 2.
 def Angle2():
-#    print("check1")
     ret, frame = cap.read()
     grayImg = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    #cv.imshow("window", grayImg)
-    #if (cv.waitKey(1) & 0xFF == ord('q')):
-        #cv.destroyAllWindows()
     arucoDictionary = aruco.Dictionary_get(aruco.DICT_6X6_250)
     arucoParameters = aruco.DetectorParameters_create()
     corners, ids, rejectedImgPoints = aruco.detectMarkers(grayImg, arucoDictionary,parameters=arucoParameters)
@@ -205,13 +197,11 @@ def Angle2():
         
     return phi, ids, D
 
+
+#The following function is used to detect aruco marker id 3.
 def Angle3():
-#    print("check1")
     ret, frame = cap.read()
     grayImg = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    #cv.imshow("window", grayImg)
-    #if (cv.waitKey(1) & 0xFF == ord('q')):
-        #cv.destroyAllWindows()
     arucoDictionary = aruco.Dictionary_get(aruco.DICT_6X6_250)
     arucoParameters = aruco.DetectorParameters_create()
     corners, ids, rejectedImgPoints = aruco.detectMarkers(grayImg, arucoDictionary,parameters=arucoParameters)
@@ -264,13 +254,10 @@ def Angle3():
     return phi, ids, D
 
 
+#The following function is used to detect aruco marker id 4.
 def Angle4():
-#    print("check1")
     ret, frame = cap.read()
     grayImg = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    #cv.imshow("window", grayImg)
-    #if (cv.waitKey(1) & 0xFF == ord('q')):
-        #cv.destroyAllWindows()
     arucoDictionary = aruco.Dictionary_get(aruco.DICT_6X6_250)
     arucoParameters = aruco.DetectorParameters_create()
     corners, ids, rejectedImgPoints = aruco.detectMarkers(grayImg, arucoDictionary,parameters=arucoParameters)
@@ -324,13 +311,10 @@ def Angle4():
 
 
 
+#The following function is used to detect aruco marker id 5.
 def Angle5():
-#    print("check1")
     ret, frame = cap.read()
     grayImg = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    #cv.imshow("window", grayImg)
-    #if (cv.waitKey(1) & 0xFF == ord('q')):
-        #cv.destroyAllWindows()
     arucoDictionary = aruco.Dictionary_get(aruco.DICT_6X6_250)
     arucoParameters = aruco.DetectorParameters_create()
     corners, ids, rejectedImgPoints = aruco.detectMarkers(grayImg, arucoDictionary,parameters=arucoParameters)
@@ -385,16 +369,12 @@ def Angle5():
     
 i = 0
 
+
+#The following while lopp is used to send the appropriate angle and distance value associated with aruco marker id 0.
 while(1):
     ret, frame = cap.read()
     phi, ids, D = Angle0()
     print(phi)
-    #cv.imshow("window", frame)
-#    D = Distance(frame)
-#    ids = ID(frame)
-#    Dint = int(D)
-#    D3 = D*10-Dint*10
-#    print("check2")
     while True:
         try:
             if (D != 0):
@@ -414,16 +394,11 @@ i = 0
 
 sleep(1)
 
+#The following while lopp is used to send the appropriate angle and distance value associated with aruco marker id 1.
 while(1):
     ret, frame = cap.read()
     phi, ids, D = Angle1()
     print(phi)
-    #cv.imshow("window", frame)
-#    D = Distance(frame)
-#    ids = ID(frame)
-#    Dint = int(D)
-#    D3 = D*10-Dint*10
-#    print("check2")
     while True:
         try:
             if (D != 0):
@@ -442,17 +417,12 @@ while(1):
 i = 0
 
 sleep(2)
-    
+ 
+#The following while lopp is used to send the appropriate angle and distance value associated with aruco marker id 2.
 while(1):
     ret, frame = cap.read()
     phi, ids, D = Angle2()
     print(phi)
-    #cv.imshow("window", frame)
-#    D = Distance(frame)
-#    ids = ID(frame)
-#    Dint = int(D)
-#    D3 = D*10-Dint*10
-#    print("check2")
     while True:
         try:
             if (D != 0):
@@ -471,17 +441,12 @@ while(1):
 i = 0
 
 sleep(2)
-    
+
+#The following while lopp is used to send the appropriate angle and distance value associated with aruco marker id 3.
 while(1):
     ret, frame = cap.read()
     phi, ids, D = Angle3()
     print(phi)
-    #cv.imshow("window", frame)
-#    D = Distance(frame)
-#    ids = ID(frame)
-#    Dint = int(D)
-#    D3 = D*10-Dint*10
-#    print("check2")
     while True:
         try:
             if (D != 0):
@@ -501,17 +466,12 @@ while(1):
 i = 0
     
 sleep(2)
-    
+
+#The following while lopp is used to send the appropriate angle and distance value associated with aruco marker id 4.
 while(1):
     ret, frame = cap.read()
     phi, ids, D = Angle4()
     print(phi)
-    #cv.imshow("window", frame)
-#    D = Distance(frame)
-#    ids = ID(frame)
-#    Dint = int(D)
-#    D3 = D*10-Dint*10
-#    print("check2")
     while True:
         try:
             if (D != 0):
@@ -530,17 +490,12 @@ while(1):
 sleep(2)
         
 i = 0
-    
+
+#The following while lopp is used to send the appropriate angle and distance value associated with aruco marker id 5.
 while(1):
     ret, frame = cap.read()
     phi, ids, D = Angle5()
     print(phi)
-    #cv.imshow("window", frame)
-#    D = Distance(frame)
-#    ids = ID(frame)
-#    Dint = int(D)
-#    D3 = D*10-Dint*10
-#    print("check2")
     while True:
         try:
             if (D != 0):
@@ -558,17 +513,12 @@ while(1):
     
 sleep(2)
 i = 0
-    
+
+#The following while lopp is used to send the appropriate angle and distance value associated with aruco marker id 0 (last marker, marker #7).
 while(1):
     ret, frame = cap.read()
     phi, ids, D = Angle0()
     print(phi)
-    #cv.imshow("window", frame)
-#    D = Distance(frame)
-#    ids = ID(frame)
-#    Dint = int(D)
-#    D3 = D*10-Dint*10
-#    print("check2")
     while True:
         try:
             if (D != 0):
